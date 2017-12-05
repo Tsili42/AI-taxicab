@@ -28,7 +28,8 @@ public class taxiservice{
 			}
 
 			FILE inFile2 = new File(args[2]);
-			State prev = new PointState(null); //erwthmatiko no1
+			State prev = new PointState();
+			prev = null; //erwthmatiko no1
 			try (BufferedReader input = new BufferedReader(new FileReader(inFile1))){
 			    List<State> NodeList = new List<>();
 				String line = input.readLine();		//insert if here
