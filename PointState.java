@@ -51,8 +51,8 @@ public class PointState implements State, Comparable<PointState>{
         return this.distFromRoot;
     }
 
-    public void build_neighborhood(List a){
-        this.neighbors = a;
+    public void build_neighborhood(State a){
+        this.neighbors.add(a);
     }
 
     public int compareTo(PointState s){
