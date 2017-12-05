@@ -49,11 +49,12 @@ public class PointState implements State, Comparable<PointState>{
         return this.distFromRoot;
     }
 
-    @Override
-    public State readState(String path){
-
+    public int compareTo(PointState s){
+        int one = Integer.compare(this.x, s.x);
+        if (one != 0) return one;
+        one = Integer.compare(this.y, s.y);
+        return one;
     }
-
 
 
 //    @Override
