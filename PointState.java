@@ -1,4 +1,3 @@
-//import java.util.Vector;
 //import java.util.ArrayList;
 //import java.util.Collection;
 
@@ -12,21 +11,12 @@ public class PointState implements State, Comparable<PointState>{
     private State previous;
     //private Vector<Vector<Character>> map;
 
-    public PointState(String path){
-        File inFile = new File(path);
-
-        try (BufferedReader input = new BufferedReader(new FileReader(inFile))){
-            String line = input.readLine();
-            line = input.readLine();
-            String[] point = line.split(",");
-            this.x = point[0];
-            this.y = point[1];
-            this.id = point[2];
-            return myState;
-        } catch (IOException e) {
-            System.out.println("No input!");
-        }
-
+    public PointState(string line){
+        String[] point = line.split(",");
+        this.x = point[0];
+        this.y = point[1];
+        this.id = point[2];
+        return myState;
     }
 
     @Override
