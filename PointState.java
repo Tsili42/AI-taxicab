@@ -1,3 +1,4 @@
+import java.util.*;
 //import java.util.ArrayList;
 //import java.util.Collection;
 
@@ -9,6 +10,7 @@ public class PointState implements State, Comparable<PointState>{
     private int y;
     private int id;
     private State previous;
+    private List<State> neighbors;
     //private Vector<Vector<Character>> map;
 
     public PointState(string line){
@@ -49,12 +51,17 @@ public class PointState implements State, Comparable<PointState>{
         return this.distFromRoot;
     }
 
+    public void build_neighborhood(List a){
+        this.neighbors  = a;
+    }
+
     public int compareTo(PointState s){
         int one = Integer.compare(this.x, s.x);
         if (one != 0) return one;
         one = Integer.compare(this.y, s.y);
         return one;
     }
+
 
 
 //    @Override
