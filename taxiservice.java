@@ -28,14 +28,17 @@ public class taxiservice{
 			}
 
 			FILE inFile2 = new File(args[2]);
-			State prev = new PointState();
-			prev = null; //erwthmatiko no1
+			State prev = new PointState(); //erwthmatiko no1
+			prev = null;
 			try (BufferedReader input = new BufferedReader(new FileReader(inFile1))){
 			    List<State> NodeList = new List<>();
 				String line = input.readLine();		//insert if here
 				while ((line = input.readLine()) != null){
 					State node = new PointState(line);
-					prev.build_neighborhood(node); // erwthmatiko no2
+					try{
+					    prev.build_neighborhood(node); // erwthmatiko no2
+					}
+					catch (NullPointerEception e) {}
 					node.build_neighborhood(prev);
 					prev = node;
 					NodeList.add(node);
