@@ -52,7 +52,7 @@ public class PointState implements State, Comparable<PointState>{
     }
 
     public void build_neighborhood(List a){
-        this.neighbors  = a;
+        this.neighbors = a;
     }
 
     public int compareTo(PointState s){
