@@ -56,10 +56,28 @@ public class taxiservice{
                     crossRoads.add(elem);
                 }
 			}
+			
 
-
-
-
-        }
+			//NEW_STUFF!
+			for (Iterator iter = NodeList.iterator(); iter.hasNext();){
+				for (Iterator crossiter = crossRoads.iterator(); crossiter.hasNext();){
+					PointState node = (PointState) iter.next();
+					PointState crossnode = (PointState) crossiter.next();
+					List<State> neighbours = new List<>();
+					if (node.compareTo(crossnode) == 0){
+						crossnode.change_id(-1);				//to state pou einai stavrodromi ki exei tous swstous geitones exei id == -1
+						neighbours = node.get_neighbours();
+						for (Iterator i = neighbours.iterator(); i.hasNext();){
+							PointState crossneighbour = (PointState) i.next();
+							crossnode.build_neighborhood(crossneighbour);		//mono to state pou vrisketai sto crossRoads exei tous swstous geitones
+						}
+						//remove the state that doesn't have the correct neighbours from NodeList
+						if (node.get_id() != -1){
+							NodeList.remove(node);
+						}
+					}
+				}
+       		 }
+		}
     }
 }
