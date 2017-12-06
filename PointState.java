@@ -62,6 +62,14 @@ public class PointState implements State, Comparable<PointState>{
         return one;
     }
 
+//NEW_STUFF!!
+    public void change_id(int new_id){
+        this.id = new_id;
+    }
+
+    public List<State> get_neighbours(){    //prepei na dhlwthei ws List<State> h ws List sketo?
+        return this.neighbors;
+    }
 
 
 //    @Override
