@@ -59,6 +59,9 @@ public class taxiservice{
 			
 
 			//NEW_STUFF!
+			/*Edw pername to NodeList anazitwntas emfaniseis twn stavrodromiwn. otan vroume mia emfanish pairnoume tous
+			geitones auths kai tous kollame stous geitone tou State pou uparxei sth lista me ta stavrodromia.
+			Telos diagrafoume to Node apo th lista me ta nodes.*/
 			for (Iterator iter = NodeList.iterator(); iter.hasNext();){
 				for (Iterator crossiter = crossRoads.iterator(); crossiter.hasNext();){
 					PointState node = (PointState) iter.next();
