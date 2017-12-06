@@ -10,6 +10,9 @@ public interface State{
     public boolean isFinal();
     public boolean isBad();
     public State readState(String);
+    public int CompareTo(State);
+    public void change_id(int);
+    public List<State> get_neighbours();
     //public State getPrevious();
     public Collection<State> next();
 }
