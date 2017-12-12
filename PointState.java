@@ -18,6 +18,7 @@ public class PointState implements State, Comparable<PointState>{
         this.x = point[0];
         this.y = point[1];
         this.id = point[2];
+        this.neighbors = new List<>();
         return myState;
     }
 
