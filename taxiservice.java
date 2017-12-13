@@ -10,7 +10,7 @@ public class taxiservice{
 			BufferedReader input = new BufferedReader(new FileReader(inFile));
 			String line = input.readLine();
 			line = input.readLine();
-			State client = new PointState(line);
+			PointState client = new PointState(line);
 			File inFile1 = new File(args[1]);	//read taxis' positions
 			input = new BufferedReader(new FileReader(inFile1));
 			List<State> TaxisList = new ArrayList<State>();
@@ -56,14 +56,17 @@ public class taxiservice{
 			// System.out.println(".|.");
 			Set<State> seen = new HashSet<>();
 			List<State> crossRoads = new ArrayList<>();
+			//Set<State> crossRoads = new HashSet<>();	//mallon me set pio grhgoro
 			for (Iterator iter = NodeList.iterator(); iter.hasNext();){
                 PointState elem = (PointState) iter.next();
 
                 if (!seen.add(elem)){
-                    crossRoads.add(elem);
-                    //System.out.println("not ok");
+                	if (!crossRoads.contains(elem)){crossRoads.add(elem);}   
+                	//crossRoads.add(elem);               
+                    //System.out.println("ok");
                 }
 			}
+
 
 			// for (Iterator iter = crossRoads.iterator(); iter.hasNext();){
 			// 	PointState elem = (PointState) iter.next();
@@ -71,13 +74,17 @@ public class taxiservice{
 			// 	System.out.println(elem.get_y());
 			// }
 
-			//NEW_STUFF!
+			System.out.println(crossRoads.size());
+
 			for (Iterator iter = NodeList.iterator(); iter.hasNext();){
+				PointState node = (PointState) iter.next();
 				for (Iterator crossiter = crossRoads.iterator(); crossiter.hasNext();){
-					PointState node = (PointState) iter.next();
+					
 					PointState crossnode = (PointState) crossiter.next();
 					List<State> neighbours = new ArrayList<>();
 					if ((node.compareTo(crossnode) == 0) && (node.get_id() != crossnode.get_id())){
+						//System.out.println(node.get_x());
+						//System.out.println("MPIKA");
 						crossnode.change_id(-1);				//to state pou einai stavrodromi ki exei tous swstous geitones exei id == -1
 						neighbours = node.get_neighbours();
 						for (Iterator i = neighbours.iterator(); i.hasNext();){
@@ -91,25 +98,36 @@ public class taxiservice{
 					}
 				}
        		 }
-    //    		 for (Iterator iter = NodeList.iterator(); iter.hasNext();){
-				// 	PointState elem = (PointState) iter.next();
-				// 	List<State> gotmilk = elem.get_neighbours();
-				// 	System.out.println(elem.get_x()+" my neighbours:");
-				// 	for (Iterator i = gotmilk.iterator(); i.hasNext();){
-				// 		PointState point  = (PointState) i.next();
-				// 		try{
-				// 			System.out.println(point.get_x());
-				// 		}
-				// 		catch(NullPointerException e){System.out.println("Gamw to nako !");}
-				// 	}
-				// }
+        		for (Iterator iter = NodeList.iterator(); iter.hasNext();){
+					PointState elem = (PointState) iter.next();
+					List<State> gotmilk = elem.get_neighbours();
+					System.out.println(elem.get_x()+" my neighbours:");
+					for (Iterator i = gotmilk.iterator(); i.hasNext();){
+						PointState point  = (PointState) i.next();
+						try{
+							System.out.println(point.get_x());
+						}
+						catch(NullPointerException e){System.out.println("Gamw to nako !");}
+					}
+				}
 
-			 // for (Iterator iter = NodeList.iterator(); iter.hasNext();){
-				// 	PointState elem = (PointState) iter.next();
-				// 	double h = elem.get_heuristic(TaxisList);
-				// 	System.out.println(elem.get_x() + " has heuristic " + h);
-				// }
+			//  for (Iterator iter = NodeList.iterator(); iter.hasNext();){
+			//  	PointState elem = (PointState) iter.next();
+			//  	for (Iterator tax = TaxisList.iterator(); tax.hasNext();){
+			// 		PointState taxi = (PointState) tax.next();
+			// 		double h = elem.distance_from(taxi);
+			// 		System.out.println(elem.get_x() + " has distance from taxi " + h);
+			// 	}
+			// }
 				
+
+			//  for (Iterator iter = NodeList.iterator(); iter.hasNext();){
+			// 		PointState elem = (PointState) iter.next();
+			// 		if (elem.isFinal(client,NodeList)){
+			// 			System.out.println (elem.get_x() + " " + elem.get_y());
+			// 		}
+			// }
+		
 		}catch(IOException e){
 			e.printStackTrace();
 		}
