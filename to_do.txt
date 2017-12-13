@@ -1,5 +1,7 @@
 To do:
 
-1) calculate heuristic at each node while running astar (taxilist,node.x,node.y) returns min{}
+//1) calculate heuristic at each node while running astar (taxilist,node.x,node.y) returns min{}
 2) from pseudocode to java code (A*)
-3) 
+3) find nearest from client/taxi in graph (PointState method)
+4) isFinal (PointState method)
+5) check if taxis are graph nodes 
