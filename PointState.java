@@ -2,7 +2,7 @@ import java.util.*;
 
 public class PointState implements State, Comparable<PointState>{
 
-    private int heuristic;
+    private double heuristic;
     private int distFromRoot;
     private double x;
     private double y;
@@ -41,9 +41,15 @@ public class PointState implements State, Comparable<PointState>{
         return this.previous;
     }
 
-    @Override
-    public int get_heuristic(){
-        return this.heuristic;
+   
+    public double get_heuristic(List<State> taxis){
+        double min = Double.MAX_VALUE;
+        for (Iterator iter = taxis.iterator(); iter.hasNext();){
+            PointState elem = (PointState) iter.next();
+            double dist = Math.sqrt(Math.pow((this.x - elem.get_x()),2.0) + Math.pow((this.y - elem.get_y()),2.0));
+            if (dist < min){min = dist;}
+        }
+        return min;
     }
 
     @Override
@@ -84,7 +90,7 @@ public class PointState implements State, Comparable<PointState>{
         return result;
     }
 
-//NEW_STUFF!!
+
     public void change_id(int new_id){
         this.id = new_id;
     }

@@ -40,18 +40,18 @@ public class taxiservice{
 					prev = node;
 					NodeList.add(node);
 				}
-				for (Iterator iter = NodeList.iterator(); iter.hasNext();){
-					PointState elem = (PointState) iter.next();
-					List<State> gotmilk = elem.get_neighbours();
-					System.out.println(elem.get_x()+" my neighbours:");
-					for (Iterator i = gotmilk.iterator(); i.hasNext();){
-						PointState point  = (PointState) i.next();
-						try{
-							System.out.println(point.get_x());
-						}
-						catch(NullPointerException e){System.out.println("Gamw to nako !");}
-					}
-				}
+				// for (Iterator iter = NodeList.iterator(); iter.hasNext();){
+				// 	PointState elem = (PointState) iter.next();
+				// 	List<State> gotmilk = elem.get_neighbours();
+				// 	System.out.println(elem.get_x()+" my neighbours:");
+				// 	for (Iterator i = gotmilk.iterator(); i.hasNext();){
+				// 		PointState point  = (PointState) i.next();
+				// 		try{
+				// 			System.out.println(point.get_x());
+				// 		}
+				// 		catch(NullPointerException e){System.out.println("Gamw to nako !");}
+				// 	}
+				// }
 
 			// System.out.println(".|.");
 			Set<State> seen = new HashSet<>();
@@ -65,11 +65,11 @@ public class taxiservice{
                 }
 			}
 
-			for (Iterator iter = crossRoads.iterator(); iter.hasNext();){
-				PointState elem = (PointState) iter.next();
-				//List<State> gotmilk = elem.get_neighbours();
-				System.out.println(elem.get_y());
-			}
+			// for (Iterator iter = crossRoads.iterator(); iter.hasNext();){
+			// 	PointState elem = (PointState) iter.next();
+			// 	//List<State> gotmilk = elem.get_neighbours();
+			// 	System.out.println(elem.get_y());
+			// }
 
 			//NEW_STUFF!
 			for (Iterator iter = NodeList.iterator(); iter.hasNext();){
@@ -91,18 +91,24 @@ public class taxiservice{
 					}
 				}
        		 }
-       		 for (Iterator iter = NodeList.iterator(); iter.hasNext();){
-					PointState elem = (PointState) iter.next();
-					List<State> gotmilk = elem.get_neighbours();
-					System.out.println(elem.get_x()+" my neighbours:");
-					for (Iterator i = gotmilk.iterator(); i.hasNext();){
-						PointState point  = (PointState) i.next();
-						try{
-							System.out.println(point.get_x());
-						}
-						catch(NullPointerException e){System.out.println("Gamw to nako !");}
-					}
-				}
+    //    		 for (Iterator iter = NodeList.iterator(); iter.hasNext();){
+				// 	PointState elem = (PointState) iter.next();
+				// 	List<State> gotmilk = elem.get_neighbours();
+				// 	System.out.println(elem.get_x()+" my neighbours:");
+				// 	for (Iterator i = gotmilk.iterator(); i.hasNext();){
+				// 		PointState point  = (PointState) i.next();
+				// 		try{
+				// 			System.out.println(point.get_x());
+				// 		}
+				// 		catch(NullPointerException e){System.out.println("Gamw to nako !");}
+				// 	}
+				// }
+
+			 // for (Iterator iter = NodeList.iterator(); iter.hasNext();){
+				// 	PointState elem = (PointState) iter.next();
+				// 	double h = elem.get_heuristic(TaxisList);
+				// 	System.out.println(elem.get_x() + " has heuristic " + h);
+				// }
 				
 		}catch(IOException e){
 			e.printStackTrace();
