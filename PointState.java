@@ -3,22 +3,24 @@ import java.util.*;
 public class PointState implements State, Comparable<PointState>{
 
     private double heuristic;
-    private int distFromRoot;
+    private double distFromRoot;
     private double x;
     private double y;
     private int id;
     private State previous;
     private List<State> neighbors;
+    //private Vector<Vector<Character>> map;
 
-    public PointState(){
-
-    }
-    public PointState(String line){
+    public PointState(String line, double dist){
         String[] point = line.split(",");
         this.x = Double.parseDouble(point[0]);
         this.y = Double.parseDouble(point[1]);
         this.id = Integer.parseInt(point[2]);
         this.neighbors = new ArrayList<State>();
+        this.distFromRoot = dist;
+    }
+
+    public PointState(){
     }
 
     @Override
@@ -41,37 +43,32 @@ public class PointState implements State, Comparable<PointState>{
         return this.previous;
     }
 
-   
-    public double get_heuristic(List<State> taxis){
+    @Override
+    public void set_heuristic(List<State> taxis, List<State> Nodes){
         double min = Double.MAX_VALUE;
         for (Iterator iter = taxis.iterator(); iter.hasNext();){
-            PointState elem = (PointState) iter.next();
+            State elem = ((State) iter.next()).nearest(Nodes); //A change here
             double dist = Math.sqrt(Math.pow((this.x - elem.get_x()),2.0) + Math.pow((this.y - elem.get_y()),2.0));
             if (dist < min){min = dist;}
         }
         this.heuristic = min;
-        return min;
     }
 
     @Override
-    public int get_distance(){
+    public double get_distance(){
         return this.distFromRoot;
     }
 
     public void build_neighborhood(State a){
-        try{
-            this.neighbors.add(a);
+        try {this.neighbors.add(a);
         }
-        catch (NullPointerException e) {System.out.println("Gamw to nako patokorfa!");}
+        catch (NullPointerException e) {System.out.println("Hi");}
     }
 
     public int compareTo(PointState s){
-        int one = Double.compare(this.x, s.x);
-        if (one != 0) return one;
-        one = Double.compare(this.y, s.y);
-        return one;
+        return Double.compare(this.heuristic + this.distFromRoot, s.heuristic + s.distFromRoot);
     }
-    @Override
+
     public boolean equals(Object o){
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
@@ -82,27 +79,24 @@ public class PointState implements State, Comparable<PointState>{
         return (this.y == that.y);
     }
 
-    @Override
-    public int hashCode(){
-        Double a = new Double(this.x);
-        int result = a.hashCode();
-        Double b = new Double(this.y);
-        result = 31 * result + b.hashCode();
-        return result;
-    }
-
-
     public void change_id(int new_id){
         this.id = new_id;
     }
 
+    @Override
     public List<State> get_neighbours(){    //prepei na dhlwthei ws List<State> h ws List sketo?
         return this.neighbors;
     }
 
+    @Override
+    public void set_distance(Double dist){
+        this.distFromRoot = dist;
+    }
+
     //calculates distance of two nodes/taxis-node/PointState in general
     //taken from: https://stackoverflow.com/questions/3694380/calculating-distance-between-two-points-using-latitude-longitude-what-am-i-doi
-    public double distance_from (State a){
+    @Override
+    public double distance_from(State a){
         final int R = 6371; // Radius of the earth
 
         double latDistance = Math.toRadians(this.y - a.get_y());
@@ -117,6 +111,7 @@ public class PointState implements State, Comparable<PointState>{
     }
 
     //given a list of nodes, computes which node is closest to the state we are examining
+    @Override
     public State nearest(List<State> nodes){
         double min = Double.MAX_VALUE;
         PointState target = new PointState();
@@ -131,11 +126,20 @@ public class PointState implements State, Comparable<PointState>{
     }
 
     //decides if a State is final
-    public boolean isFinal (PointState client, List<State> nodes){
+    @Override
+    public boolean isFinal(State client, List<State> nodes){
         if (this.equals(client.nearest(nodes))){    //if our state is the nearest state for our client then it's a final state
             return true;
         }
         return false;
     }
 
+    @Override
+    public int hashCode(){
+        Double a = new Double(this.x);
+        int result = a.hashCode();
+        Double b = new Double(this.y);
+        result = 31 * result + b.hashCode();
+        return result;
+    }
 }

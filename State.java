@@ -1,18 +1,15 @@
-import java.util.Collection;
+import java.util.*;
 
 public interface State{
     public double get_x();
     public double get_y();
     public int get_id();
-    //public double get_heuristic();
-    public int get_distance();
+    public void set_heuristic(List<State> Taxis, List<State> Nodes);
+    public void set_distance(Double dist);
+    public double get_distance();
+    public double distance_from(State a);
     public State get_previous();
-   // public boolean isFinal();
-    //public boolean isBad();
-   // public State readState(String);
-   // public int CompareTo(State S);
-  //  public void change_id(int);
-  //  public List<State> get_neighbours();
-    //public State getPrevious();
-   // public Collection<State> next();
+    public List<State> get_neighbours();
+    public State nearest(List<State> nodes);
+    public boolean isFinal(State goal, List<State> Nodes);
 }

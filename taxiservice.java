@@ -4,132 +4,129 @@ import java.io.*;
 public class taxiservice{
 
     public static void main(String args[]) throws IOException{
-        try {
-            Solver solver = new AstarSolver();
-			File inFile = new File(args[0]);	//read client position
-			BufferedReader input = new BufferedReader(new FileReader(inFile));
-			String line = input.readLine();
-			line = input.readLine();
-			PointState client = new PointState(line);
-			File inFile1 = new File(args[1]);	//read taxis' positions
-			input = new BufferedReader(new FileReader(inFile1));
-			List<State> TaxisList = new ArrayList<State>();
-			line = input.readLine();		//insert if here
-			while ((line = input.readLine()) != null){
-				State taxi = new PointState(line);
-				TaxisList.add(taxi);
-			}
-			
+        Solver solver = new AstarSolver();
 
-			File inFile2 = new File(args[2]);
-			PointState prev = new PointState(); //erwthmatiko no1
-			prev = null;
-			input = new BufferedReader(new FileReader(inFile2));
-			    List<State> NodeList = new ArrayList<State>();
-				line = input.readLine();		//insert if here
-				while ((line = input.readLine()) != null){
-					PointState node = new PointState(line);
-					//System.out.println("Gamw to nako");
-					try{
-						if (node.get_id() == prev.get_id()){
-					    	prev.build_neighborhood(node); // erwthmatiko no2
-					    	node.build_neighborhood(prev);
-					    }
-					}
-					catch (NullPointerException e) {}
-					prev = node;
-					NodeList.add(node);
-				}
-				// for (Iterator iter = NodeList.iterator(); iter.hasNext();){
-				// 	PointState elem = (PointState) iter.next();
-				// 	List<State> gotmilk = elem.get_neighbours();
-				// 	System.out.println(elem.get_x()+" my neighbours:");
-				// 	for (Iterator i = gotmilk.iterator(); i.hasNext();){
-				// 		PointState point  = (PointState) i.next();
-				// 		try{
-				// 			System.out.println(point.get_x());
-				// 		}
-				// 		catch(NullPointerException e){System.out.println("Gamw to nako !");}
-				// 	}
-				// }
+        //read input files & build the map
+        State client = readClient(args[0]);
+        List<State> Taxis = readTaxis(args[1]);
+        List<State> Nodes = readNodes(args[2]);
 
-			// System.out.println(".|.");
-			Set<State> seen = new HashSet<>();
-			List<State> crossRoads = new ArrayList<>();
-			//Set<State> crossRoads = new HashSet<>();	//mallon me set pio grhgoro
-			for (Iterator iter = NodeList.iterator(); iter.hasNext();){
-                PointState elem = (PointState) iter.next();
+//        System.out.println("Size of nodes: " + Nodes.size());
+//        //Printing block
+//        for (Iterator iter = Nodes.iterator(); iter.hasNext();){
+//            PointState elem = (PointState) iter.next();
+//            System.out.println("(" + elem.get_x() + ", " + elem.get_y() + "):");
+//            List<State> gotMilk = elem.get_neighbours();
+//            for (Iterator j = gotMilk.iterator(); j.hasNext();){
+//                PointState new_elem = (PointState) j.next();
+//                try { System.out.println("(" + new_elem.get_x() + ", " + new_elem.get_y() + ")");
+//                }
+//                catch (NullPointerException e) {System.out.println("Hi2");}
+//            }
+//        }
 
-                if (!seen.add(elem)){
-                	if (!crossRoads.contains(elem)){crossRoads.add(elem);}   
-                	//crossRoads.add(elem);               
-                    //System.out.println("ok");
+        Set<State> seen = new HashSet<>();
+        Set<State> crossRoads = new HashSet<State>();
+        for (Iterator iter = Nodes.iterator(); iter.hasNext();){
+            PointState elem = (PointState) iter.next();
+
+            if (!seen.add(elem)){
+                crossRoads.add(elem);
+            }
+        }
+
+        System.out.println(crossRoads.size());
+
+        for (Iterator iter = Nodes.iterator(); iter.hasNext();){
+            PointState node = (PointState) iter.next();
+            for (Iterator crossiter = crossRoads.iterator(); crossiter.hasNext();){
+                PointState crossnode = (PointState) crossiter.next();
+                List<State> neighbours = new ArrayList<>();
+                if (node.equals(crossnode) && (node.get_id() != crossnode.get_id())){
+                    //System.out.println(node.get_id() + " ** " + crossnode.get_id());
+                    crossnode.change_id(-1);				//to state pou einai stavrodromi ki exei tous swstous geitones exei id == -1
+                    neighbours = node.get_neighbours();
+                    for (Iterator i = neighbours.iterator(); i.hasNext();){
+                        PointState crossneighbour = (PointState) i.next();
+                        crossnode.build_neighborhood(crossneighbour);		//mono to state pou vrisketai sto crossRoads exei tous swstous geitones
+                    }
+                    //remove the state that doesn't have the correct neighbours from NodeList
+                    if (node.get_id() != -1){
+                        iter.remove();
+                    }
                 }
-			}
+            }
+        }
 
+        for (Iterator iter = Taxis.iterator(); iter.hasNext();){
+            State curTaxi = ((State) iter.next()).nearest(Nodes);
+            curTaxi.set_distance(0.0);
+            State result = solver.solve(curTaxi, client, Nodes, Taxis, Integer.parseInt(args[3]));
+            if (result == null) continue;
+            System.out.println(result.get_x());
+            System.out.println(result.get_y());
+        }
+    }
 
-			// for (Iterator iter = crossRoads.iterator(); iter.hasNext();){
-			// 	PointState elem = (PointState) iter.next();
-			// 	//List<State> gotmilk = elem.get_neighbours();
-			// 	System.out.println(elem.get_y());
-			// }
+    private static State readClient(String path){
+        try {
+            File inFile = new File(path);	//read client position
+            BufferedReader input = new BufferedReader(new FileReader(inFile));
+            String line = input.readLine();
+            line = input.readLine();
+            State client = new PointState(line, Double.MAX_VALUE);
+            return client;
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-			System.out.println(crossRoads.size());
+    private static List<State> readTaxis(String path){
+        try {
+            File inFile1 = new File(path);	//read taxis' positions
+            BufferedReader input = new BufferedReader(new FileReader(inFile1));
+            List<State> TaxisList = new ArrayList<State>();
+            String line = input.readLine();		//insert if here
+            while ((line = input.readLine()) != null){
+                State taxi = new PointState(line, 0);
+                TaxisList.add(taxi);
+            }
+            return TaxisList;
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-			for (Iterator iter = NodeList.iterator(); iter.hasNext();){
-				PointState node = (PointState) iter.next();
-				for (Iterator crossiter = crossRoads.iterator(); crossiter.hasNext();){
-					
-					PointState crossnode = (PointState) crossiter.next();
-					List<State> neighbours = new ArrayList<>();
-					if ((node.compareTo(crossnode) == 0) && (node.get_id() != crossnode.get_id())){
-						//System.out.println(node.get_x());
-						//System.out.println("MPIKA");
-						crossnode.change_id(-1);				//to state pou einai stavrodromi ki exei tous swstous geitones exei id == -1
-						neighbours = node.get_neighbours();
-						for (Iterator i = neighbours.iterator(); i.hasNext();){
-							PointState crossneighbour = (PointState) i.next();
-							crossnode.build_neighborhood(crossneighbour);		//mono to state pou vrisketai sto crossRoads exei tous swstous geitones
-						}
-						//remove the state that doesn't have the correct neighbours from NodeList
-						if (node.get_id() != -1){
-							iter.remove();
-						}
-					}
-				}
-       		 }
-        		for (Iterator iter = NodeList.iterator(); iter.hasNext();){
-					PointState elem = (PointState) iter.next();
-					List<State> gotmilk = elem.get_neighbours();
-					System.out.println(elem.get_x()+" my neighbours:");
-					for (Iterator i = gotmilk.iterator(); i.hasNext();){
-						PointState point  = (PointState) i.next();
-						try{
-							System.out.println(point.get_x());
-						}
-						catch(NullPointerException e){System.out.println("Gamw to nako !");}
-					}
-				}
-
-			//  for (Iterator iter = NodeList.iterator(); iter.hasNext();){
-			//  	PointState elem = (PointState) iter.next();
-			//  	for (Iterator tax = TaxisList.iterator(); tax.hasNext();){
-			// 		PointState taxi = (PointState) tax.next();
-			// 		double h = elem.distance_from(taxi);
-			// 		System.out.println(elem.get_x() + " has distance from taxi " + h);
-			// 	}
-			// }
-				
-
-			//  for (Iterator iter = NodeList.iterator(); iter.hasNext();){
-			// 		PointState elem = (PointState) iter.next();
-			// 		if (elem.isFinal(client,NodeList)){
-			// 			System.out.println (elem.get_x() + " " + elem.get_y());
-			// 		}
-			// }
-		
-		}catch(IOException e){
-			e.printStackTrace();
-		}
+    private static List<State> readNodes(String path){
+        try {
+            File inFile2 = new File(path);
+            PointState prev = new PointState(); //erwthmatiko no1
+            prev = null;
+            BufferedReader input = new BufferedReader(new FileReader(inFile2));
+            List<State> NodeList = new ArrayList<State>();
+            String line = input.readLine();		//insert if here
+            while ((line = input.readLine()) != null){
+                PointState node = new PointState(line, Double.MAX_VALUE);
+                //System.out.println("LOL");
+                try{
+                    if (node.get_id() == prev.get_id()){
+                        prev.build_neighborhood(node); // erwthmatiko no2
+                        node.build_neighborhood(prev);
+                    }
+                }
+                catch (NullPointerException e) {System.out.println("Hey");}
+                prev = node;
+                NodeList.add(node);
+            }
+            return NodeList;
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
