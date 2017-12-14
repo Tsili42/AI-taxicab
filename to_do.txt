@@ -5,3 +5,6 @@ To do:
 3) find nearest from client/taxi in graph (PointState method)
 4) isFinal (PointState method)
 5) check if taxis are graph nodes 
+
+Thursday
+Θα μπορούσαμε να κάνουμε κατευθείαν αντικατάσταση των taxi απ' τα πιο κοντινά τους nodes στην λίστα των taxis.
