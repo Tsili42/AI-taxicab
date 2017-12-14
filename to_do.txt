@@ -1,10 +1,9 @@
 To do:
 
-//1) calculate heuristic at each node while running astar (taxilist,node.x,node.y) returns min{}
-2) from pseudocode to java code (A*)
-3) find nearest from client/taxi in graph (PointState method)
-4) isFinal (PointState method)
-5) check if taxis are graph nodes 
+1) ignore --> Θα μπορούσαμε να κάνουμε κατευθείαν αντικατάσταση των taxi απ'τα πιο κοντινά nodes στην λίστα των taxis (i know you wouldnt)
+2) Fix time issue @ neighbour expanding.
+4) keep path to solution @ Astar
+5) print solution @ main & keep it for KML files (see below)
+3) Make KML files.
 
-Thursday
-Θα μπορούσαμε να κάνουμε κατευθείαν αντικατάσταση των taxi απ' τα πιο κοντινά τους nodes στην λίστα των taxis.
+
