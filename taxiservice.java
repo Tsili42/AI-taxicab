@@ -22,23 +22,23 @@ public class taxiservice{
             curTaxi.nearest(Nodes);
             curTaxi.set_distance(0.0);
             client.nearest(Nodes);
-            State result = solver.solve(curTaxi, client, Nodes, Taxis, Integer.parseInt(args[3]));
+            RetObj result = solver.solve(curTaxi, client, Nodes, Taxis, Integer.parseInt(args[3]));
             if (result == null) continue;
-            Results.add(result);
-            //printSteps(result);
-            System.out.println(result.get_distance() + " with taxi id = " + curTaxi.get_id());
-            if (result.get_distance() < minDistance)    minID = result.get_id();
+            //Results.add(result);
+            //System.out.println(result.get_distance() + " with taxi id = " + curTaxi.get_id());
+//            printSteps(result);
+            //if (result.get_distance() < minDistance)    minID = curTaxi.get_id();
             //KML_writer(Results, minID);
 
         }
     }
 
-    private static void printSteps(State state){
-        if (state.get_previous() != null){
-            printSteps(state.get_previous());
-            state.printMe();
-        }
-    }
+//    private static void reConstruct(Map<State, State>,  State s){
+//        if (state.get_previous() != null){
+//            printSteps(state.get_previous());
+//            state.printMe();
+//        }
+//    }
 
     private static State readClient(String path){
         try {
@@ -74,6 +74,51 @@ public class taxiservice{
     }
 
     private static List<State> readNodes(String path){
+//        Map<Integer, PointState> map = new HashMap<Integer, PointState>();
+//		BufferedReader in = null;
+//		List<State> NodeList = new ArrayList<State>();
+//        try {
+//            in = new BufferedReader(new FileReader(path));
+//            String line;
+//            int previd = -1;
+//            PointState prevnode = null, node = null;
+//            //Point point;
+//            in.readLine();
+//
+//            while ((line = in.readLine()) != null) {
+//            	node = new PointState(line, Double.MAX_VALUE);
+//				int id = node.get_id();
+//                PointState intersection = (PointState) map.get(node.hashCode());
+//				if (intersection != null) {
+//					for (State neigh : node.get_neighbours()) intersection.build_neighborhood(neigh);
+//					node = intersection;
+//				}
+//				if (id == previd) {
+//					node.build_neighborhood(prevnode);
+//					prevnode.build_neighborhood(node);
+//				}
+//           		map.put(node.hashCode(), node);
+//
+//            	previd = id;
+//            	prevnode = node;
+//            	NodeList.add(node);
+//            }
+//
+//            return NodeList;
+//        }
+//        catch (IOException e) {
+//        	System.out.println("Wrong Nodes Input File");
+//        	System.exit(-1);
+//        }
+//        finally {
+//        	try {
+//            	if (in != null) in.close();
+//            } catch (IOException e) {}
+//        }
+//
+//        return null;
+//	}
+
         try {
             File inFile2 = new File(path);
             PointState prev = new PointState(); //erwthmatiko no1

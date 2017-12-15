@@ -4,23 +4,23 @@ import java.io.*;
 public class AstarSolver implements Solver{
 
     @Override
-    public State solve (State initial, State goal, List<State> Nodes, List<State> Taxis, int beam){
+    public RetObj solve (State initial, State goal, List<State> Nodes, List<State> Taxis, int beam){
         Set<State> closedSet = new HashSet<>();
         PriorityQueue<State> openSet = new PriorityQueue<>();
+        Map<State, State> cameFrom = new HashMap<>();
 
         openSet.add(initial);
         initial.set_heuristic(goal);
 
-//        System.out.println("!");
-        initial.printMe();
-//        System.out.println("!");
+        //initial.printMe();
+
         while (!(openSet.isEmpty())){
             State cur = openSet.poll();
 
-            //cur.printMe();
-            //System.out.println(cur.get_heuristic());
-            if (cur.isFinal(goal)) return cur;
-
+            if (cur.isFinal(goal)){
+                RetObj myObj = new RetObj(cameFrom, cur);
+                return myObj;
+            }
             closedSet.add(cur);
 
             for (Iterator iter = cur.get_neighbours().iterator(); iter.hasNext();){
@@ -37,7 +37,8 @@ public class AstarSolver implements Solver{
                     double tentativeDist = cur.get_distance() + neighbor.distance_from(cur);
                     if (tentativeDist >= neighbor.get_distance()) continue;
 
-                    neighbor.set_previous(cur);
+                    cameFrom.put(neighbor, cur);
+                    //neighbor.set_previous(cur);
                     neighbor.set_distance(tentativeDist);
                 }
             }
