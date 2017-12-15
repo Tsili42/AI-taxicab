@@ -39,19 +39,29 @@ public class PointState implements State, Comparable<PointState>{
     }
 
     @Override
+    public void set_previous(State prev){
+        this.previous = prev;
+    }
+
+    @Override
     public State get_previous(){
         return this.previous;
     }
 
     @Override
-    public void set_heuristic(List<State> taxis, List<State> Nodes){
-        double min = Double.MAX_VALUE;
-        for (Iterator iter = taxis.iterator(); iter.hasNext();){
-            State elem = ((State) iter.next()).nearest(Nodes); //A change here
-            double dist = Math.sqrt(Math.pow((this.x - elem.get_x()),2.0) + Math.pow((this.y - elem.get_y()),2.0));
-            if (dist < min){min = dist;}
-        }
-        this.heuristic = min;
+    public double get_heuristic(){
+        return this.heuristic;
+    }
+
+    @Override
+    public void set_heuristic(State goal){
+//        double min = Double.MAX_VALUE;
+//        for (Iterator iter = taxis.iterator(); iter.hasNext();){
+//            State elem = ((State) iter.next()).nearest(Nodes); //A change here
+//            double dist = Math.sqrt(Math.pow((this.x - elem.get_x()),2.0) + Math.pow((this.y - elem.get_y()),2.0));
+//            if (dist < min){min = dist;}
+//        }
+        this.heuristic = this.distance_from(goal);
     }
 
     @Override
@@ -112,7 +122,7 @@ public class PointState implements State, Comparable<PointState>{
 
     //given a list of nodes, computes which node is closest to the state we are examining
     @Override
-    public State nearest(List<State> nodes){
+    public void nearest(List<State> nodes){
         double min = Double.MAX_VALUE;
         PointState target = new PointState();
         target = null;
@@ -122,16 +132,14 @@ public class PointState implements State, Comparable<PointState>{
                 if (this.distance_from(elem) < min){ min = this.distance_from(elem); target = (PointState) elem;}
             }
         }
-        return target;
+        target.build_neighborhood(this);
+        this.build_neighborhood(target);
     }
 
     //decides if a State is final
     @Override
-    public boolean isFinal(State client, List<State> nodes){
-        if (this.equals(client.nearest(nodes))){    //if our state is the nearest state for our client then it's a final state
-            return true;
-        }
-        return false;
+    public boolean isFinal(State client){
+        return this.equals(client);
     }
 
     @Override
@@ -141,5 +149,11 @@ public class PointState implements State, Comparable<PointState>{
         Double b = new Double(this.y);
         result = 31 * result + b.hashCode();
         return result;
+    }
+
+    @Override
+    public void printMe(){
+//        System.out.println("I am " + this.id + " w/ coordinates: (" + this.x + "," + this.y + ")");
+            System.out.println(this.x + "," + this.y);
     }
 }
