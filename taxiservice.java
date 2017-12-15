@@ -24,39 +24,65 @@ public class taxiservice{
 //                catch (NullPointerException e) {System.out.println("Hi2");}
 //            }
 //        }
-
-        Set<State> seen = new HashSet<>();
-        Set<State> crossRoads = new HashSet<State>();
+        
+        // NEW way of creating neighborhoods!
+        Map<Integer,State> seen = new HashMap<>();
         for (Iterator iter = Nodes.iterator(); iter.hasNext();){
-            PointState elem = (PointState) iter.next();
-
-            if (!seen.add(elem)){
-                crossRoads.add(elem);
-            }
+        	PointState elem = (PointState) iter.next();
+        	if(!seen.containsValue(elem)){
+        		seen.put(elem.hashCode(),elem);
+        		elem.change_id(-1);
+        	}
+        	else{
+        		//System.out.println("Found a duplicate!");
+        		PointState node = (PointState) seen.get(elem.hashCode());
+        		List<State> neighbours = new ArrayList<>();
+        		neighbours = elem.get_neighbours();
+        		for(Iterator i = neighbours.iterator(); i.hasNext();){
+        			PointState crossneighbour = (PointState) i.next();
+        			node.build_neighborhood(crossneighbour);
+        		}        		
+        	}
+        }
+        for(Iterator iter = Nodes.iterator(); iter.hasNext();){
+        	PointState elem = (PointState) iter.next();
+        	if (elem.get_id() != -1){
+        		iter.remove();
+        	}
         }
 
-        System.out.println(crossRoads.size());
+//         Set<State> seen = new HashSet<>();
+//         Set<State> crossRoads = new HashSet<State>();
+//         for (Iterator iter = Nodes.iterator(); iter.hasNext();){
+//             PointState elem = (PointState) iter.next();
 
-        for (Iterator iter = Nodes.iterator(); iter.hasNext();){
-            PointState node = (PointState) iter.next();
-            for (Iterator crossiter = crossRoads.iterator(); crossiter.hasNext();){
-                PointState crossnode = (PointState) crossiter.next();
-                List<State> neighbours = new ArrayList<>();
-                if (node.equals(crossnode) && (node.get_id() != crossnode.get_id())){
-                    //System.out.println(node.get_id() + " ** " + crossnode.get_id());
-                    crossnode.change_id(-1);				//to state pou einai stavrodromi ki exei tous swstous geitones exei id == -1
-                    neighbours = node.get_neighbours();
-                    for (Iterator i = neighbours.iterator(); i.hasNext();){
-                        PointState crossneighbour = (PointState) i.next();
-                        crossnode.build_neighborhood(crossneighbour);		//mono to state pou vrisketai sto crossRoads exei tous swstous geitones
-                    }
-                    //remove the state that doesn't have the correct neighbours from NodeList
-                    if (node.get_id() != -1){
-                        iter.remove();
-                    }
-                }
-            }
-        }
+//             if (!seen.add(elem)){
+//                 crossRoads.add(elem);
+//             }
+//         }
+
+//         System.out.println(crossRoads.size());
+
+//         for (Iterator iter = Nodes.iterator(); iter.hasNext();){
+//             PointState node = (PointState) iter.next();
+//             for (Iterator crossiter = crossRoads.iterator(); crossiter.hasNext();){
+//                 PointState crossnode = (PointState) crossiter.next();
+//                 List<State> neighbours = new ArrayList<>();
+//                 if (node.equals(crossnode) && (node.get_id() != crossnode.get_id())){
+//                     //System.out.println(node.get_id() + " ** " + crossnode.get_id());
+//                     crossnode.change_id(-1);				//to state pou einai stavrodromi ki exei tous swstous geitones exei id == -1
+//                     neighbours = node.get_neighbours();
+//                     for (Iterator i = neighbours.iterator(); i.hasNext();){
+//                         PointState crossneighbour = (PointState) i.next();
+//                         crossnode.build_neighborhood(crossneighbour);		//mono to state pou vrisketai sto crossRoads exei tous swstous geitones
+//                     }
+//                     //remove the state that doesn't have the correct neighbours from NodeList
+//                     if (node.get_id() != -1){
+//                         iter.remove();
+//                     }
+//                 }
+//             }
+//         }
 
         for (Iterator iter = Taxis.iterator(); iter.hasNext();){
             State curTaxi = ((State) iter.next()).nearest(Nodes);
