@@ -1,9 +1,1 @@
-To do:
-
-1) ignore --> Θα μπορούσαμε να κάνουμε κατευθείαν αντικατάσταση των taxi απ'τα πιο κοντινά nodes στην λίστα των taxis (i know you wouldnt)
-2) Fix time issue @ neighbour expanding.
-4) keep path to solution @ Astar
-5) print solution @ main & keep it for KML files (see below)
-3) Make KML files.
-
-
+Nothing
