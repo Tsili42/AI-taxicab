@@ -9,7 +9,6 @@ public class PointState implements State, Comparable<PointState>{
     private int id;
     private State previous;
     private List<State> neighbors;
-    //private Vector<Vector<Character>> map;
 
     public PointState(String line, double dist){
         String[] point = line.split(",");
@@ -38,15 +37,6 @@ public class PointState implements State, Comparable<PointState>{
         return this.id;
     }
 
-    @Override
-    public void set_previous(State prev){
-        this.previous = prev;
-    }
-
-    @Override
-    public State get_previous(){
-        return this.previous;
-    }
 
     @Override
     public double get_heuristic(){
@@ -55,12 +45,6 @@ public class PointState implements State, Comparable<PointState>{
 
     @Override
     public void set_heuristic(State goal){
-//        double min = Double.MAX_VALUE;
-//        for (Iterator iter = taxis.iterator(); iter.hasNext();){
-//            State elem = ((State) iter.next()).nearest(Nodes); //A change here
-//            double dist = Math.sqrt(Math.pow((this.x - elem.get_x()),2.0) + Math.pow((this.y - elem.get_y()),2.0));
-//            if (dist < min){min = dist;}
-//        }
         this.heuristic = this.distance_from(goal);
     }
 
@@ -94,7 +78,7 @@ public class PointState implements State, Comparable<PointState>{
     }
 
     @Override
-    public List<State> get_neighbours(){    //prepei na dhlwthei ws List<State> h ws List sketo?
+    public List<State> get_neighbours(){
         return this.neighbors;
     }
 
@@ -120,7 +104,7 @@ public class PointState implements State, Comparable<PointState>{
         return Math.sqrt(distance);
     }
 
-    //given a list of nodes, computes which node is closest to the state we are examining
+    //given a list of nodes, computes which node is closest to the state we are examining. That node is then added to the neighbourhood of the state
     @Override
     public void nearest(List<State> nodes){
         double min = Double.MAX_VALUE;
@@ -151,9 +135,9 @@ public class PointState implements State, Comparable<PointState>{
         return result;
     }
 
+    //prints contents of a State. Just for debugging!
     @Override
     public void printMe(){
-//        System.out.println("I am " + this.id + " w/ coordinates: (" + this.x + "," + this.y + ")");
             System.out.println(this.x + "," + this.y);
     }
 }
