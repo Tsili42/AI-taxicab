@@ -6,37 +6,46 @@ public class taxiservice{
     public static void main(String args[]) throws IOException{
         Solver solver = new AstarSolver();
 
-        //read input files & build the map
+        /*read input files & build the map*/
         State client = readClient(args[0]);
         List<State> Taxis = readTaxis(args[1]);
         List<State> Nodes = readNodes(args[2]);
 
+        /*Run A* for each taxi*/
+        runMultipleSolvers(client, Taxis, Nodes, solver, args[3]);
+    }
+
+    private static void runMultipleSolvers(State client, List<State> Taxis, List<State> Nodes, Solver solver, String path){
         double minDistance = Double.MAX_VALUE;
         int minID = -1;
         List<RetObj> Results = new ArrayList<RetObj>();
 
-        for (Iterator iter = Taxis.iterator(); iter.hasNext();){	//run A* for every taxi available
+        for (Iterator iter = Taxis.iterator(); iter.hasNext();){	/*run A* for every taxi available*/
             State curTaxi = ((State) iter.next());
             curTaxi.nearest(Nodes);
             client.nearest(Nodes);
-            for (Iterator i = Nodes.iterator(); i.hasNext();){		//for every execution of A* we must set all other nodes' distances from root equal to infinity
-            	State curNode = ((State) i.next());
-            	curNode.set_distance(Double.MAX_VALUE);
+            for (Iterator i = Nodes.iterator(); i.hasNext();){		/*for every execution of A* we must set all other nodes' distances from root equal to infinity*/
+                State curNode = ((State) i.next());
+                curNode.set_distance(Double.MAX_VALUE);
             }
-            client.set_distance(Double.MAX_VALUE);					//same with clients distance from root
-            RetObj result = solver.solve(curTaxi, client, Nodes, Taxis, Integer.parseInt(args[3]));
+            client.set_distance(Double.MAX_VALUE);					/*same with clients distance from root*/
+            RetObj result = solver.solve(curTaxi, client, Nodes, Taxis, Integer.parseInt(path));
             if (result == null) continue;
             Results.add(result);
-            if ((result.get_final()).get_distance() < minDistance){		//find the taxi_id of the vehicle travelling the minimum distance
-            	 minID = curTaxi.get_id();
-            	 minDistance = (result.get_final()).get_distance();
-            	}
+            if ((result.get_final()).get_distance() < minDistance){		/*find the taxi_id of the vehicle traveling the minimum distance*/
+                 minID = curTaxi.get_id();
+                 minDistance = (result.get_final()).get_distance();
+            }
         }
-        System.out.println("The selected (minimum) distance is "+minDistance +" travelled by taxi with id = "+minID);
+
+        /*Uncomment the following for testing purposes*/
+//        System.out.println("The selected (minimum) distance is "+minDistance +" traveled by taxi with id = "+minID);
+
         KML_writer("Taxi_Routes_little.kml",Results,minID);
+
     }
 
-    //creates the KML file in order to visually represent the routes of our taxis
+    /*creates the KML file in order to visually represent the routes of our taxis*/
      private static void KML_writer(String filename, List<RetObj> results, int min_id){
         FileWriter fileWriter = null;
         BufferedWriter Writer = null;
@@ -105,7 +114,7 @@ public class taxiservice{
         }
     }
 
-    //reads info for client and creates the state that represents them
+    /*reads info for client and creates the state that represents them*/
     private static State readClient(String path){
         try {
             File inFile = new File(path);	//read client position
@@ -121,7 +130,7 @@ public class taxiservice{
         return null;
     }
 
-    //reads info for the taxis and creates a list where every element is a state describing a taxi
+    /*reads info for the taxis and creates a list where every element is a state describing a taxi*/
     private static List<State> readTaxis(String path){
         try {
             File inFile1 = new File(path);	//read taxis' positions
@@ -140,7 +149,7 @@ public class taxiservice{
         return null;
     }
 
-    //reads info about the nodes of the map. Creates a list where every element corresponds to one node
+    /*reads info about the nodes of the map. Creates a list where every element corresponds to one node*/
     private static List<State> readNodes(String path){
         try {
             File inFile2 = new File(path);
@@ -150,7 +159,7 @@ public class taxiservice{
             BufferedReader input = new BufferedReader(new FileReader(inFile2));
             List<State> NodeList = new ArrayList<State>();
             int flag = 0;
-            String line = input.readLine();	
+            String line = input.readLine();
             while ((line = input.readLine()) != null){
                 PointState node = new PointState(line, Double.MAX_VALUE);
 
@@ -168,7 +177,7 @@ public class taxiservice{
 
                     if (temp.get_id() == prev.get_id()){
                         PointState ret = seen.get(prev.hashCode());
-                        ret.build_neighborhood(node); 
+                        ret.build_neighborhood(node);
                         node.build_neighborhood(ret);
                     }
 

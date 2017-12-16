@@ -37,7 +37,6 @@ public class PointState implements State, Comparable<PointState>{
         return this.id;
     }
 
-
     @Override
     public double get_heuristic(){
         return this.heuristic;
@@ -87,8 +86,8 @@ public class PointState implements State, Comparable<PointState>{
         this.distFromRoot = dist;
     }
 
-    //calculates distance of two nodes/taxis-node/PointState in general
-    //taken from: https://stackoverflow.com/questions/3694380/calculating-distance-between-two-points-using-latitude-longitude-what-am-i-doi
+    /*calculates distance of two nodes/taxis-node/PointState in general
+    taken from: https://stackoverflow.com/questions/3694380/calculating-distance-between-two-points-using-latitude-longitude-what-am-i-doi */
     @Override
     public double distance_from(State a){
         final int R = 6371; // Radius of the earth
@@ -104,7 +103,7 @@ public class PointState implements State, Comparable<PointState>{
         return Math.sqrt(distance);
     }
 
-    //given a list of nodes, computes which node is closest to the state we are examining. That node is then added to the neighbourhood of the state
+    /*given a list of nodes, computes which node is closest to the state we are examining. That node is then added to the neighborhood of the state*/
     @Override
     public void nearest(List<State> nodes){
         double min = Double.MAX_VALUE;
@@ -120,7 +119,7 @@ public class PointState implements State, Comparable<PointState>{
         this.build_neighborhood(target);
     }
 
-    //decides if a State is final
+    /*decides if a State is final*/
     @Override
     public boolean isFinal(State client){
         return this.equals(client);
@@ -135,7 +134,7 @@ public class PointState implements State, Comparable<PointState>{
         return result;
     }
 
-    //prints contents of a State. Just for debugging!
+    /*prints contents of a State. Just for debugging!*/
     @Override
     public void printMe(){
             System.out.println(this.x + "," + this.y);
